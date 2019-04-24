@@ -3,11 +3,18 @@ package DAO_simulatie;
 import java.util.Date;
 
 public class Reiziger {
+    private int id;
     private String naam;
     private Date gbdatum;
 
-    public Reiziger() {
+    public Reiziger(int id, String nm, Date gbDate) {
+        this.id = id;
+        this.naam = nm;
+        this.gbdatum = gbDate;
+    }
 
+    public int getId() {
+        return id;
     }
 
     public String getNaam() {
@@ -24,6 +31,11 @@ public class Reiziger {
 
     public void setGBdatum(Date datum) {
         this.gbdatum = datum;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 
 }
