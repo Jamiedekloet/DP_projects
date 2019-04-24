@@ -47,7 +47,7 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
         return reiziger;
     }
 
-    public Boolean delete(Reiziger reiziger) {
+    public boolean delete(Reiziger reiziger) {
         if (reizigers.contains(reiziger)) {
             reizigers.remove(reiziger);
             return true;

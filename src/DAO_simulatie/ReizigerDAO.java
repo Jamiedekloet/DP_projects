@@ -12,7 +12,7 @@ public interface ReizigerDAO {
 
     public Reiziger update(Reiziger reiziger);
 
-    public Boolean delete(Reiziger reiziger);
+    public boolean delete(Reiziger reiziger);
 
 
 

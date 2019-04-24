@@ -35,7 +35,10 @@ public class Reiziger {
 
     @Override
     public String toString() {
-        return super.toString();
+        return "Reiziger{" +
+                "id=" + id +
+                ", naam='" + naam + '\'' +
+                ", gbdatum=" + gbdatum +
+                '}';
     }
-
 }
