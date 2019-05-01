@@ -12,3 +12,5 @@
 hs_err_pid*
 
 /.idea*
+/src/DAO_simulatie/.idea*
+.DS_Store
