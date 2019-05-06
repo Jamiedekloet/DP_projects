@@ -1,4 +1,4 @@
-package DAO_simulatie;
+package DAOP1;
 
 import java.util.Date;
 

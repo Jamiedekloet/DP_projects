@@ -1,10 +1,12 @@
-package DAO_simulatie;
+package DAOP1;
+
+import DAOP2.Reiziger;
+import DAOP2.ReizigerDAO;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-public class ReizigerOracleDAOImpl implements ReizigerDAO {
+public abstract class ReizigerOracleDAOImpl implements ReizigerDAO {
     private ArrayList<Reiziger> reizigers = new ArrayList<>();
 
     public ArrayList<Reiziger> findAll() {
@@ -13,7 +15,7 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
 
     public ArrayList<Reiziger> findByDatum(Date GBdatum) {
         ArrayList<Reiziger> newReizigers = new ArrayList<>();
-        for (Reiziger reiziger : reizigers) {
+        for (DAOP2.Reiziger reiziger : reizigers) {
             if (reiziger.getGBdatum().compareTo(GBdatum) == 0) {
                 newReizigers.add(reiziger);
             }
@@ -22,16 +24,16 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
 
     }
 
-    public Reiziger save(Reiziger reiziger) {
+    public DAOP2.Reiziger save(Reiziger reiziger) {
         reizigers.add(reiziger);
         return reiziger;
     }
 
-    public Reiziger update(Reiziger reiziger) {
+    public DAOP2.Reiziger update(Reiziger reiziger) {
         int index = -1;
 
         for (int i = 0; i < reizigers.size(); i++) {
-            Reiziger newReiziger = reizigers.get(i);
+            DAOP2.Reiziger newReiziger = reizigers.get(i);
 
             if (newReiziger.getId() == reiziger.getId()) {
                 index = i;
@@ -54,6 +56,5 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
         } else {
             return false;
         }
-
     }
 }
