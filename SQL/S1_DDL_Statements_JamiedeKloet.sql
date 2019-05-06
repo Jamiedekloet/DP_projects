@@ -1,6 +1,8 @@
-select * from medewerkers;
+CREATE TABLE NEW_MEDEWERKERS AS SELECT * FROM MEDEWERKERS;
 
-ALTER TABLE medewerkers ADD geslacht varchar(3) ADD CONSTRAINT typegeslacht CHECK (geslacht LIKE '[M,V]');
+select * from NEW_MEDEWERKERS;
+
+ALTER TABLE NEW_MEDEWERKERS ADD geslacht varchar(3) ADD CONSTRAINT typegeslacht CHECK (geslacht LIKE '[M,V]');
 
 select * from afdelingen;
 
@@ -19,16 +21,18 @@ INSERT INTO afdelingen (ANR, NAAM, LOCATIE, HOOFD) VALUES (test.nextval, 'CONTAC
 INSERT INTO afdelingen (ANR, NAAM, LOCATIE, HOOFD) VALUES (test.nextval, 'ICT', 'AMSTERDAM', 7782);
 
 CREATE TABLE his_adressentabel(
-    POSTCODE varchar(255) NULL,
+    POSTCODE varchar(6) NULL,
     HUISNUMMER INT,
     INGANGSDATUM DATE NOT NULL,
     EINDDATUM DATE,
-    TELEFOON INT UNIQUE,
+    TELEFOON INT(10) UNIQUE,
     MED_MNR INT NOT NULL,
     FOREIGN KEY (MED_MNR) REFERENCES MEDEWERKERS(mnr),
     CONSTRAINT PK_address PRIMARY KEY (POSTCODE,HUISNUMMER,INGANGSDATUM)
 );
 
-ALTER TABLE his_adressentabel ADD CONSTRAINT einddatum CHECK ( EINDDATUM >= INGANGSDATUM ) ADD CONSTRAINT postcode CHECK ( POSTCODE LIKE '[0-9{4},A-Z{2}]' );
+ALTER TABLE his_adressentabel ADD CONSTRAINT einddatum CHECK ( EINDDATUM >= INGANGSDATUM ) ADD CONSTRAINT postcodeFormat CHECK (POSTCODE LIKE '[0-9{4},A-Z{2}]');
 
 SELECT * FROM his_adressentabel;
+
+-- H7, 1:
