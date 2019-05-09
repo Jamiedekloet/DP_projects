@@ -13,12 +13,46 @@ public class Reiziger {
         this.gbdatum = gbDate;
     }
 
+    public Reiziger() {}
+
     public int getId() {
         return id;
     }
 
+    public void setId(int id) { this.id = id;}
+
     public String getNaam() {
         return this.naam;
+    }
+
+    public String getVoorletters() {
+        String[] naam = this.getNaam().split(" ");
+
+        if (naam.length == 3) {
+            return naam[0];
+        } else {
+            return null;
+        }
+    }
+
+    public String getMiddleName() {
+        String[] naam = this.getNaam().split(" ");
+
+        if (naam.length == 3) {
+            return naam[1];
+        } else {
+            return null;
+        }
+    }
+
+    public String getLastName() {
+        String[] naam = this.getNaam().split(" ");
+
+        if (naam.length == 3) {
+            return naam[2];
+        } else {
+            return null;
+        }
     }
 
     public void setNaam(String nm) {
