@@ -23,7 +23,7 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
             newReiziger.setId(results.getInt("REIZIGERID"));
             newReiziger.setNaam(results.getString("VOORLETTERS") + " " +
                     results.getString("TUSSENVOEGSEL") + " " + results.getString("ACHTERNAAM"));
-            newReiziger.setGBdatum(results.getDate("GEBOORTEDATUM"));
+            newReiziger.setGBdatum(results.getDate("GEBORTEDATUM"));
 
             reizigers.add(newReiziger);
         }
@@ -46,7 +46,7 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
             newReiziger.setId(results.getInt("REIZIGERID"));
             newReiziger.setNaam(results.getString("VOORLETTERS") + " " +
                     results.getString("TUSSENVOEGSEL") + " " + results.getString("ACHTERNAAM"));
-            newReiziger.setGBdatum(results.getDate("GEBOORTEDATUM"));
+            newReiziger.setGBdatum(results.getDate("GEBORTEDATUM"));
 
             newReizigers.add(newReiziger);
         }
