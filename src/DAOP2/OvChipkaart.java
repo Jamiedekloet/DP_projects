@@ -43,4 +43,14 @@ public class OvChipkaart {
     public void setBalans(double balans) {
         this.balans = balans;
     }
+
+    @Override
+    public String toString() {
+        return "OvChipkaart{" +
+                "kaartNummer=" + kaartNummer +
+                ", geldigTot=" + geldigTot +
+                ", klasse=" + klasse +
+                ", balans=" + balans +
+                '}';
+    }
 }
