@@ -37,14 +37,17 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
 
             if (newReiziger.getId() == reiziger.getId()) {
                 index = i;
+                newReiziger.setNaam(reiziger.getNaam());
+                newReiziger.setGBdatum(reiziger.getGBdatum());
+
+                reizigers.set(index, newReiziger);
                 break;
             }
         }
 
-        if (index == -1)
+        if (index == -1) {
             return null;
-
-        reizigers.set(index, reiziger);
+        }
 
         return reiziger;
     }
