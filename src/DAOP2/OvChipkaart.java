@@ -7,10 +7,17 @@ public class OvChipkaart {
     private Date geldigTot;
     private int klasse;
     private double balans;
-//    private
-
+    private Reiziger reiziger;
 
     public OvChipkaart() {}
+
+    public OvChipkaart(int kaartNummer, Date geldigTot, int klasse, float saldo, Reiziger reiziger) {
+        this.kaartNummer = kaartNummer;
+        this.geldigTot = geldigTot;
+        this.klasse = klasse;
+        this.balans = saldo;
+        this.reiziger = reiziger;
+    }
 
     public int getKaartNummer() {
         return kaartNummer;
@@ -42,6 +49,14 @@ public class OvChipkaart {
 
     public void setBalans(double balans) {
         this.balans = balans;
+    }
+
+    public Reiziger getReiziger() {
+        return reiziger;
+    }
+
+    public void setReiziger(Reiziger reiziger) {
+        this.reiziger = reiziger;
     }
 
     @Override

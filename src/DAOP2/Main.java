@@ -7,7 +7,10 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
-        Reiziger reiziger = new Reiziger(1,"Piet", java.sql.Date.valueOf("1990-12-23"));
+        ArrayList<OvChipkaart> cards = null;
+        Reiziger reiziger = new Reiziger(1,"Piet", java.sql.Date.valueOf("1990-12-23"), cards
+
+        );
         System.out.println(reiziger.getNaam());
 
         ReizigerOracleDAOImpl reizigerDAO = new ReizigerOracleDAOImpl();

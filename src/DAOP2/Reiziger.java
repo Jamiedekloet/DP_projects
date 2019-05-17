@@ -1,16 +1,19 @@
 package DAOP2;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Reiziger {
     private int id;
     private String naam;
     private Date gbdatum;
+    private ArrayList<OvChipkaart> cards;
 
-    public Reiziger(int id, String nm, Date gbDate) {
+    public Reiziger(int id, String nm, Date gbDate, ArrayList<OvChipkaart> cards) {
         this.id = id;
         this.naam = nm;
         this.gbdatum = gbDate;
+        this.cards = cards;
     }
 
     public Reiziger() {}
@@ -65,6 +68,14 @@ public class Reiziger {
 
     public void setGBdatum(Date datum) {
         this.gbdatum = datum;
+    }
+
+    public ArrayList<OvChipkaart> getCards() {
+        return cards;
+    }
+
+    public void setCards(ArrayList<OvChipkaart> cards) {
+        this.cards = cards;
     }
 
     @Override

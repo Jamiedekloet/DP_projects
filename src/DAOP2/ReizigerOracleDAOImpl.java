@@ -37,9 +37,11 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
 
-        Date gbdate = new SimpleDateFormat("dd/MM/yyyy").parse(GBdatum);
-        Statement allReizigers = conn.createStatement();
-        ResultSet results = allReizigers.executeQuery("SELECT * FROM Reiziger WHERE GEBOORTEDATUM LIKE '"+gbdate+"'");
+        PreparedStatement preparedStatement = conn.prepareStatement(
+                "SELECT * FROM Reiziger WHERE geboortedatum = ?"
+        );
+        preparedStatement.setObject(1, convertToSqlDate(GBdatum));
+        ResultSet results = preparedStatement.executeQuery();
 
         while (results.next()) {
             Reiziger newReiziger = new Reiziger();
@@ -97,5 +99,11 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
 
         return true;
 
+    }
+
+    private java.sql.Date convertToSqlDate(String date) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyymmdd");
+        Date parsed = format.parse(date);
+        return new java.sql.Date(parsed.getTime());
     }
 }
