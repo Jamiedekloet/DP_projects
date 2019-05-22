@@ -1,14 +1,15 @@
 package DAOP3;
 
+import java.util.ArrayList;
+
 public class Product {
     private int productNummer;
     private String productNaam;
     private String beschrijving;
     private double prijs;
+    private ArrayList<OvChipkaart> cards;
 
-    public Product(int productNummer) {
-        this.productNummer = productNummer;
-    }
+    public Product() {}
 
     public Product(int productNummer, String productNaam, String beschrijving, double prijs) {
         this.productNummer = productNummer;
@@ -19,6 +20,10 @@ public class Product {
 
     public int getProductNummer() {
         return productNummer;
+    }
+
+    public void setProductNummer(int productNummer) {
+        this.productNummer = productNummer;
     }
 
     public String getProductNaam() {
@@ -43,6 +48,14 @@ public class Product {
 
     public void setPrijs(double prijs) {
         this.prijs = prijs;
+    }
+
+    public void setOVChipkaarten(ArrayList<OvChipkaart> cards) {
+        this.cards = cards;
+    }
+
+    public ArrayList<OvChipkaart> getCards() {
+        return cards;
     }
 
     @Override

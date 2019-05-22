@@ -1,5 +1,6 @@
 package DAOP3;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class OvChipkaart {
@@ -8,6 +9,7 @@ public class OvChipkaart {
     private int klasse;
     private double balans;
     private Reiziger reiziger;
+    private ArrayList<Product> products;
 
     public OvChipkaart() {}
 
@@ -57,6 +59,14 @@ public class OvChipkaart {
 
     public void setReiziger(Reiziger reiziger) {
         this.reiziger = reiziger;
+    }
+
+    public ArrayList<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
     }
 
     @Override

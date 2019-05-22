@@ -2,8 +2,8 @@ package DAOP3;
 
 import java.sql.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ReizigerOracleDAOImpl implements ReizigerDAO {
@@ -24,6 +24,7 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
             newReiziger.setNaam(results.getString("VOORLETTERS") + " " +
                     results.getString("TUSSENVOEGSEL") + " " + results.getString("ACHTERNAAM"));
             newReiziger.setGBdatum(results.getDate("GEBORTEDATUM"));
+            newReiziger.setCards(OvChipkaartDAOImpl.findByReiziger(newReiziger));
 
             reizigers.add(newReiziger);
         }
@@ -105,5 +106,36 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
         SimpleDateFormat format = new SimpleDateFormat("yyyymmdd");
         Date parsed = format.parse(date);
         return new java.sql.Date(parsed.getTime());
+    }
+
+    public static Reiziger findById(int reizigerId) throws SQLException {
+        Reiziger reiziger = null;
+        OracleBaseDao DAO = new OracleBaseDao();
+        Connection conn = DAO.getConnection();
+
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(
+                    "SELECT * FROM REIZIGER WHERE REIZIGERID = ?"
+            );
+            preparedStatement.setInt(1, reizigerId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            String voorletters, tussenvoegsel, achternaam;
+            Date date;
+            while (resultSet.next()) {
+                reiziger = new Reiziger();
+                reiziger.setNaam(resultSet.getString("voorletters"));
+//                reiziger.setNaam(resultSet.getString("tussenvoegsel"));
+//                reiziger.setNaam(resultSet.getString("achternaam"));
+                reiziger.setGBdatum(resultSet.getDate("geboortedatum"));
+
+            }
+            preparedStatement.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return reiziger;
     }
 }
