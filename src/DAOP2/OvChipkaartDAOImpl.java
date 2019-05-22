@@ -18,6 +18,7 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
             card.setGeldigTot(result.getDate("geldigtot"));
             card.setKlasse(result.getInt("klasse"));
             card.setBalans(result.getInt("saldo"));
+            card.setReiziger(ReizigerOracleDAOImpl.findById(result.getInt("reizigerid")));
 
             cards.add(card);
         }
@@ -48,7 +49,7 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
         return card;
     }
 
-    public ArrayList<OvChipkaart> findByReiziger(Reiziger reiziger) throws SQLException {
+    public static ArrayList<OvChipkaart> findByReiziger(Reiziger reiziger) throws SQLException {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
         ArrayList<OvChipkaart> cards = new ArrayList<>();
