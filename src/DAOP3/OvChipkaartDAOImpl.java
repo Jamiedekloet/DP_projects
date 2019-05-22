@@ -109,4 +109,35 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
 
         return cards;
     }
+
+    public static OvChipkaart findById(int ovChipkaarId) throws SQLException {
+        OvChipkaart card = null;
+        OracleBaseDao DAO = new OracleBaseDao();
+        Connection conn = DAO.getConnection();
+
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(
+                    "SELECT * FROM OV_CHIPKAART WHERE kaartnummer = ?"
+            );
+            preparedStatement.setInt(1, ovChipkaarId);
+            ResultSet result = preparedStatement.executeQuery();
+
+            String voorletters, tussenvoegsel, achternaam;
+            Date date;
+            while (result.next()) {
+                card = new OvChipkaart();
+                card.setKaartNummer(result.getInt("kaartnummer"));
+                card.setGeldigTot(result.getDate("geldigtot"));
+                card.setKlasse(result.getInt("klasse"));
+                card.setBalans(result.getInt("saldo"));
+
+            }
+            preparedStatement.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return card;
+    }
 }

@@ -21,7 +21,7 @@ public class ProductOracleDAOImpl implements ProductDAO {
             product.setProductNaam(result.getString("productnaam"));
             product.setBeschrijving(result.getString("beschrijving"));
             product.setPrijs(result.getDouble("prijs"));
-//            product.setReiziger(ReizigerOracleDAOImpl.findById(result.getInt("reizigerid")));
+//            product.setOVChipkaarten(OvChipkaartDAOImpl.findById(result.getInt("productnummer")));
 
             products.add(product);
         }
@@ -57,7 +57,7 @@ public class ProductOracleDAOImpl implements ProductDAO {
             product.setProductNaam(result3.getString("productnaam"));
             product.setBeschrijving(result3.getString("beschrijving"));
             product.setPrijs(result3.getDouble("prijs"));
-//            product.setReiziger(reiziger);
+            product.setOVChipkaarten(OvChipkaartDAOImpl.findByReiziger(reiziger));
 
             products.add(product);
         }
