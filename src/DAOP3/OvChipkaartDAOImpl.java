@@ -21,6 +21,7 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
             card.setKlasse(result.getInt("klasse"));
             card.setBalans(result.getInt("saldo"));
             card.setReiziger(ReizigerOracleDAOImpl.findById(result.getInt("reizigerid")));
+            card.setProducts(ProductOracleDAOImpl.findByOvChipkaart(card));
 
             cards.add(card);
         }
@@ -46,6 +47,8 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
             card.setGeldigTot(result.getDate("geldigtot"));
             card.setKlasse(result.getInt("klasse"));
             card.setBalans(result.getInt("saldo"));
+            card.setReiziger(ReizigerOracleDAOImpl.findById(result.getInt("reizigerid")));
+            card.setProducts(ProductOracleDAOImpl.findByOvChipkaart(card));
         }
 
         return card;
@@ -69,6 +72,7 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
             card.setKlasse(result.getInt("klasse"));
             card.setBalans(result.getInt("saldo"));
             card.setReiziger(reiziger);
+            card.setProducts(ProductOracleDAOImpl.findByOvChipkaart(card));
 
             cards.add(card);
         }
@@ -100,7 +104,7 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
             card.setKlasse(result.getInt("klasse"));
             card.setBalans(result.getInt("saldo"));
             card.setProducts(ProductOracleDAOImpl.findByOvChipkaart(card));
-//            card.setReiziger(reiziger);
+            card.setReiziger(ReizigerOracleDAOImpl.findById(result.getInt("reizigerid")));
 
             cards.add(card);
         }
@@ -130,6 +134,8 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
                 card.setGeldigTot(result.getDate("geldigtot"));
                 card.setKlasse(result.getInt("klasse"));
                 card.setBalans(result.getInt("saldo"));
+                card.setProducts(ProductOracleDAOImpl.findByOvChipkaart(card));
+                card.setReiziger(ReizigerOracleDAOImpl.findById(result.getInt("reizigerid")));
 
             }
             preparedStatement.close();
@@ -139,5 +145,58 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
         }
 
         return card;
+    }
+
+    @Override
+    public OvChipkaart save(OvChipkaart ovChipkaart) throws SQLException {
+        OracleBaseDao DAO = new OracleBaseDao();
+        Connection conn = DAO.getConnection();
+
+        String strQuery = "INSERT INTO ov_chipkaart (productnummer, geldigtot, klasse, saldo, reizigerid) VALUES (?, ?, ?, ?, ?) ";
+        PreparedStatement pstmt = conn.prepareStatement(strQuery);
+        pstmt.setInt(1, ovChipkaart.getKaartNummer());
+//        pstmt.setDate(2, ovChipkaart.getGeldigTot());
+        pstmt.setInt(3, ovChipkaart.getKlasse());
+        pstmt.setDouble(4, ovChipkaart.getBalans());
+        pstmt.setInt(5, ovChipkaart.getReiziger().getId());
+
+        pstmt.executeQuery();
+        conn.close();
+
+        return ovChipkaart;
+    }
+
+    @Override
+    public OvChipkaart update(OvChipkaart ovChipkaart) throws SQLException {
+        OracleBaseDao DAO = new OracleBaseDao();
+        Connection conn = DAO.getConnection();
+
+        String strQuery = "UPDATE ov_chipkaart SET (productnummer, geldigtot, klasse, saldo, reizigerid) VALUES (?, ?, ?, ?, ?) WHERE productnummer="+ovChipkaart.getKaartNummer();
+        PreparedStatement pstmt = conn.prepareStatement(strQuery);
+        pstmt.setInt(1, ovChipkaart.getKaartNummer());
+//        pstmt.setDate(2, ovChipkaart.getGeldigTot());
+        pstmt.setInt(3, ovChipkaart.getKlasse());
+        pstmt.setDouble(4, ovChipkaart.getBalans());
+        pstmt.setInt(5, ovChipkaart.getReiziger().getId());
+
+        pstmt.executeQuery();
+        conn.close();
+
+        return ovChipkaart;
+    }
+
+    @Override
+    public boolean delete(OvChipkaart ovChipkaart) throws SQLException {
+        OracleBaseDao DAO = new OracleBaseDao();
+        Connection conn = DAO.getConnection();
+
+        String strQuery = "DELETE FROM ov_chipkaart WHERE kaartnummer= ?";
+        PreparedStatement pstmt = conn.prepareStatement(strQuery);
+        pstmt.setInt(1, ovChipkaart.getKaartNummer());
+
+        pstmt.executeQuery();
+        conn.close();
+
+        return true;
     }
 }

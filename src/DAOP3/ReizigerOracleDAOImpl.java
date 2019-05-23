@@ -33,6 +33,61 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
         return reizigers;
     }
 
+    public Reiziger findByOvChipkaart(OvChipkaart ovChipkaart) throws ParseException, SQLException {
+        OracleBaseDao DAO = new OracleBaseDao();
+        Connection conn = DAO.getConnection();
+
+        PreparedStatement preparedStatement = conn.prepareStatement(
+                "SELECT (r.reizigerid, r.voorletters, r.tussenvoegsel, r.achternaam, r.geboortedatum)  FROM Reiziger r, ov_chipkaart o" +
+                        "WHERE o.reizigerid = ?"
+        );
+        preparedStatement.setObject(1, ovChipkaart.getKaartNummer());
+        ResultSet results = preparedStatement.executeQuery();
+
+        while (results.next()) {
+            Reiziger newReiziger = new Reiziger();
+            newReiziger.setId(results.getInt("REIZIGERID"));
+            newReiziger.setNaam(results.getString("VOORLETTERS") + " " +
+                    results.getString("TUSSENVOEGSEL") + " " + results.getString("ACHTERNAAM"));
+            newReiziger.setGBdatum(results.getDate("GEBORTEDATUM"));
+            newReiziger.setCards(OvChipkaartDAOImpl.findByReiziger(newReiziger));
+
+            return newReiziger;
+        }
+
+        return null;
+    }
+
+    public Reiziger findByProduct(Product product) throws ParseException, SQLException {
+        OracleBaseDao DAO = new OracleBaseDao();
+        Connection conn = DAO.getConnection();
+
+//        PreparedStatement preparedStatement = conn.prepareStatement(
+//                "SELECT * FROM Reiziger r, ov_chipkaart o, ov_chipkaart_product p " +
+//                        "WHERE p.productnummer = ? AND p.kaartnummer = o.kaartnummer AND o.reizigerid = r.reizigerid"
+//        );
+        PreparedStatement preparedStatement = conn.prepareStatement("SELECT *" +
+            "FROM OV_CHIPKAART_PRODUCT P" +
+            "RIGHT JOIN OV_CHIPKAART O ON P.PRODUCTNUMMER = ?" +
+            "RIGHT JOIN REIZIGER R ON R.REIZIGERID = O.REIZIGERID");
+        preparedStatement.setObject(1, product.getProductNummer());
+        ResultSet results = preparedStatement.executeQuery();
+
+        while (results.next()) {
+            Reiziger newReiziger = new Reiziger();
+            newReiziger.setId(results.getInt("REIZIGERID"));
+            newReiziger.setNaam(results.getString("VOORLETTERS") + " " +
+                    results.getString("TUSSENVOEGSEL") + " " + results.getString("ACHTERNAAM"));
+            newReiziger.setGBdatum(results.getDate("GEBORTEDATUM"));
+            newReiziger.setCards(OvChipkaartDAOImpl.findByReiziger(newReiziger));
+
+            return null;
+        }
+
+        return null;
+
+    }
+
     public ArrayList<Reiziger> findByDatum(String GBdatum) throws ParseException, SQLException {
         ArrayList<Reiziger> newReizigers = new ArrayList<>();
         OracleBaseDao DAO = new OracleBaseDao();
@@ -50,6 +105,7 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
             newReiziger.setNaam(results.getString("VOORLETTERS") + " " +
                     results.getString("TUSSENVOEGSEL") + " " + results.getString("ACHTERNAAM"));
             newReiziger.setGBdatum(results.getDate("GEBORTEDATUM"));
+            newReiziger.setCards(OvChipkaartDAOImpl.findByReiziger(newReiziger));
 
             newReizigers.add(newReiziger);
         }
@@ -70,6 +126,9 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
         pstmt.setString(4, reiziger.getLastName());
 //        pstmt.setDate(5, reiziger.getGBdatum());
 
+        pstmt.executeQuery();
+        conn.close();
+
         return reiziger;
     }
 
@@ -77,14 +136,15 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
 
-        String strQuery = "UPDATE REIZIGER SET (REIZIGERID=?, VOORLETTERS=?, TUSSENVOEGSEL=?, ACHTERNAAM=?, GEBOORTEDATUM=?) WHERE ACHTERNAAM="+reiziger.getNaam()+"AND GEBOORTEDATUM="+reiziger.getGBdatum();
+        String strQuery = "UPDATE REIZIGER SET (REIZIGERID=?, VOORLETTERS=?, TUSSENVOEGSEL=?, ACHTERNAAM=?, GEBOORTEDATUM=?) WHERE ACHTERNAAM="+reiziger.getNaam()+"AND REIZIGERID="+reiziger.getId();
         PreparedStatement pstmt = conn.prepareStatement(strQuery);
         pstmt.setInt(1, reiziger.getId());
         pstmt.setString(2, reiziger.getVoorletters());
         pstmt.setString(3, reiziger.getMiddleName());
         pstmt.setString(4, reiziger.getLastName());
-//        pstmt.setDate(5, reiziger.getGBdatum());
 
+        pstmt.executeQuery();
+        conn.close();
 
         return reiziger;
     }
@@ -93,10 +153,13 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
 
-        String strQuery = "DELETE FROM REIZIGER WHERE ACHTERNAAM= ? AND GEBOORTDATUM=?";
+        String strQuery = "DELETE FROM REIZIGER WHERE ACHTERNAAM= ? AND REIZIGERID=?";
         PreparedStatement pstmt = conn.prepareStatement(strQuery);
         pstmt.setString(1, reiziger.getNaam());
-//        pstmt.setDate(2, reiziger.getGBdatum());
+        pstmt.setInt(2, reiziger.getId());
+
+        pstmt.executeQuery();
+        conn.close();
 
         return true;
 

@@ -21,7 +21,8 @@ public class ProductOracleDAOImpl implements ProductDAO {
             product.setProductNaam(result.getString("productnaam"));
             product.setBeschrijving(result.getString("beschrijving"));
             product.setPrijs(result.getDouble("prijs"));
-//            product.setOVChipkaarten(OvChipkaartDAOImpl.findById(result.getInt("productnummer")));
+            product.setOVChipkaarten(OvChipkaartDAOImpl.findByProduct(product));
+//            add product reiziger
 
             products.add(product);
         }
@@ -58,6 +59,7 @@ public class ProductOracleDAOImpl implements ProductDAO {
             product.setBeschrijving(result3.getString("beschrijving"));
             product.setPrijs(result3.getDouble("prijs"));
             product.setOVChipkaarten(OvChipkaartDAOImpl.findByReiziger(reiziger));
+//            add product reiziger
 
             products.add(product);
         }
@@ -100,17 +102,53 @@ public class ProductOracleDAOImpl implements ProductDAO {
     }
 
     @Override
-    public Product save() throws SQLException {
-        return null;
+    public Product save(Product product) throws SQLException {
+        OracleBaseDao DAO = new OracleBaseDao();
+        Connection conn = DAO.getConnection();
+
+        String strQuery = "INSERT INTO product (productnummer, productnaam, beschrijving, prijs) VALUES (?, ?, ?, ?)";
+        PreparedStatement pstmt = conn.prepareStatement(strQuery);
+        pstmt.setInt(1, product.getProductNummer());
+        pstmt.setString(2, product.getProductNaam());
+        pstmt.setString(3, product.getBeschrijving());
+        pstmt.setDouble(4, product.getPrijs());
+
+        pstmt.executeQuery();
+        conn.close();
+
+        return product;
     }
 
     @Override
-    public Product update() throws SQLException {
-        return null;
+    public Product update(Product product) throws SQLException {
+        OracleBaseDao DAO = new OracleBaseDao();
+        Connection conn = DAO.getConnection();
+
+        String strQuery = "UPDATE product SET (productnummer, productnaam, beschrijving, prijs) VALUES (?, ?, ?, ?) WHERE productnummer="+product.getProductNummer();
+        PreparedStatement pstmt = conn.prepareStatement(strQuery);
+        pstmt.setInt(1, product.getProductNummer());
+        pstmt.setString(2, product.getProductNaam());
+        pstmt.setString(3, product.getBeschrijving());
+        pstmt.setDouble(4, product.getPrijs());
+
+        pstmt.executeQuery();
+        conn.close();
+
+        return product;
     }
 
     @Override
-    public boolean delete() throws SQLException {
-        return false;
+    public boolean delete(Product product) throws SQLException {
+        OracleBaseDao DAO = new OracleBaseDao();
+        Connection conn = DAO.getConnection();
+
+        String strQuery = "DELETE FROM product WHERE productnummer= ?";
+        PreparedStatement pstmt = conn.prepareStatement(strQuery);
+        pstmt.setInt(1, product.getProductNummer());
+
+        pstmt.executeQuery();
+        conn.close();
+
+        return true;
     }
 }

@@ -10,9 +10,9 @@ public interface ProductDAO {
 
 //    public ArrayList<Product> findByOvChipkaart(OvChipkaart ovChipkaart) throws SQLException;
 
-    public Product save() throws SQLException;
+    public Product save(Product product) throws SQLException;
 
-    public Product update() throws SQLException;
+    public Product update(Product product) throws SQLException;
 
-    public boolean delete() throws SQLException;
+    public boolean delete(Product product) throws SQLException;
 }
