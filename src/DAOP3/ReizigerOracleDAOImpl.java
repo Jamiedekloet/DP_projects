@@ -33,7 +33,7 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
         return reizigers;
     }
 
-    public Reiziger findByOvChipkaart(OvChipkaart ovChipkaart) throws ParseException, SQLException {
+    public static Reiziger findByOvChipkaart(OvChipkaart ovChipkaart) throws SQLException {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
 
@@ -58,7 +58,7 @@ public class ReizigerOracleDAOImpl implements ReizigerDAO {
         return null;
     }
 
-    public Reiziger findByProduct(Product product) throws ParseException, SQLException {
+    public static Reiziger findByProduct(Product product) throws SQLException {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
 

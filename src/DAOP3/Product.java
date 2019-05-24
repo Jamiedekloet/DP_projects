@@ -8,6 +8,7 @@ public class Product {
     private String beschrijving;
     private double prijs;
     private ArrayList<OvChipkaart> cards;
+    private Reiziger reiziger;
 
     public Product() {}
 
@@ -56,6 +57,14 @@ public class Product {
 
     public ArrayList<OvChipkaart> getCards() {
         return cards;
+    }
+
+    public Reiziger getReiziger() {
+        return reiziger;
+    }
+
+    public void setReiziger(Reiziger reiziger) {
+        this.reiziger = reiziger;
     }
 
     @Override

@@ -22,7 +22,7 @@ public class ProductOracleDAOImpl implements ProductDAO {
             product.setBeschrijving(result.getString("beschrijving"));
             product.setPrijs(result.getDouble("prijs"));
             product.setOVChipkaarten(OvChipkaartDAOImpl.findByProduct(product));
-//            add product reiziger
+            product.setReiziger(ReizigerOracleDAOImpl.findByProduct(product));
 
             products.add(product);
         }
@@ -59,7 +59,7 @@ public class ProductOracleDAOImpl implements ProductDAO {
             product.setBeschrijving(result3.getString("beschrijving"));
             product.setPrijs(result3.getDouble("prijs"));
             product.setOVChipkaarten(OvChipkaartDAOImpl.findByReiziger(reiziger));
-//            add product reiziger
+            product.setReiziger(ReizigerOracleDAOImpl.findById(reiziger.getId()));
 
             products.add(product);
         }
@@ -91,7 +91,7 @@ public class ProductOracleDAOImpl implements ProductDAO {
             product.setBeschrijving(result2.getString("beschrijving"));
             product.setPrijs(result2.getDouble("prijs"));
             product.setOVChipkaarten(OvChipkaartDAOImpl.findByProduct(product));
-//            product.setReiziger(reiziger);
+            product.setReiziger(ReizigerOracleDAOImpl.findByOvChipkaart(ovChipkaart));
 
             products.add(product);
         }
