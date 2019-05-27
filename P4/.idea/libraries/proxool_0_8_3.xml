@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="proxool-0.8.3">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/proxool-0.8.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
