@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class ProductOracleDAOImpl implements ProductDAO {
 //    public ProductOracleDAOImpl() {}
+    private OvChipkaartDAO cardDao;
 
     @Override
     public ArrayList<Product> findAll() throws SQLException {
@@ -106,6 +107,14 @@ public class ProductOracleDAOImpl implements ProductDAO {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
 
+        product.getCards().forEach(card -> {
+            try {
+                cardDao.save(card);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
         String strQuery = "INSERT INTO product (productnummer, productnaam, beschrijving, prijs) VALUES (?, ?, ?, ?)";
         PreparedStatement pstmt = conn.prepareStatement(strQuery);
         pstmt.setInt(1, product.getProductNummer());
@@ -124,6 +133,14 @@ public class ProductOracleDAOImpl implements ProductDAO {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
 
+        product.getCards().forEach(card -> {
+            try {
+                cardDao.update(card);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
         String strQuery = "UPDATE product SET (productnummer, productnaam, beschrijving, prijs) VALUES (?, ?, ?, ?) WHERE productnummer="+product.getProductNummer();
         PreparedStatement pstmt = conn.prepareStatement(strQuery);
         pstmt.setInt(1, product.getProductNummer());
@@ -141,6 +158,14 @@ public class ProductOracleDAOImpl implements ProductDAO {
     public boolean delete(Product product) throws SQLException {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
+
+        product.getCards().forEach(card -> {
+            try {
+                cardDao.delete(card);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
 
         String strQuery = "DELETE FROM product WHERE productnummer= ?";
         PreparedStatement pstmt = conn.prepareStatement(strQuery);

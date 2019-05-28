@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class OvChipkaartDAOImpl implements OvChipkaartDAO {
     ArrayList<Product> products;
+    private ProductOracleDAOImpl productDao;
 
     public ArrayList<OvChipkaart> findAll() throws SQLException{
         OracleBaseDao DAO = new OracleBaseDao();
@@ -21,7 +22,7 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
             card.setKlasse(result.getInt("klasse"));
             card.setBalans(result.getInt("saldo"));
             card.setReiziger(ReizigerOracleDAOImpl.findById(result.getInt("reizigerid")));
-            card.setProducts(ProductOracleDAOImpl.findByOvChipkaart(card));
+//            card.setProducts(ProductOracleDAOImpl.findByOvChipkaart(card));
 
             cards.add(card);
         }
@@ -152,6 +153,14 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
 
+        ovChipkaart.getProducts().forEach(product -> {
+            try {
+                productDao.save(product);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
         String strQuery = "INSERT INTO ov_chipkaart (productnummer, geldigtot, klasse, saldo, reizigerid) VALUES (?, ?, ?, ?, ?) ";
         PreparedStatement pstmt = conn.prepareStatement(strQuery);
         pstmt.setInt(1, ovChipkaart.getKaartNummer());
@@ -171,6 +180,14 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
 
+        ovChipkaart.getProducts().forEach(product -> {
+            try {
+                productDao.update(product);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
         String strQuery = "UPDATE ov_chipkaart SET (productnummer, geldigtot, klasse, saldo, reizigerid) VALUES (?, ?, ?, ?, ?) WHERE productnummer="+ovChipkaart.getKaartNummer();
         PreparedStatement pstmt = conn.prepareStatement(strQuery);
         pstmt.setInt(1, ovChipkaart.getKaartNummer());
@@ -189,6 +206,14 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
     public boolean delete(OvChipkaart ovChipkaart) throws SQLException {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
+
+            ovChipkaart.getProducts().forEach(product -> {
+                try {
+                    productDao.delete(product);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
 
         String strQuery = "DELETE FROM ov_chipkaart WHERE kaartnummer= ?";
         PreparedStatement pstmt = conn.prepareStatement(strQuery);
