@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+<!DOCTYPE hibernate-configuration PUBLIC  
+          "-//Hibernate/Hibernate Configuration DTD 5.4//EN"  
+          "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+  
+<hibernate-configuration>
+    <session-factory>
+        <property name="dialect">org.hibernate.dialect.Oracle10gDialect</property>
+        <property name="connection.url">jdbc:oracle:thin:@//localhost:49161/V1DP_OV</property>
+        <property name="connection.username">V1DP_OV</property>
+        <property name="connection.password">password</property>
+        <property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+        <property name="hibernate.connection.autoReconnect">true</property>
+    <mapping class="Reiziger"/>
+    <mapping class="OvChipkaart"/>
+    </session-factory>
+</hibernate-configuration> 
