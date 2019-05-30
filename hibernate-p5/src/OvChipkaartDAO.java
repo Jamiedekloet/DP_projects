@@ -20,12 +20,12 @@ public class OvChipkaartDAO {
     }
 
     private Session openSession() {
-        this.currentSession = this.openSession();
+        this.currentSession = factory.openSession();
         return currentSession;
     }
 
     private Session openSessionWithTransaction() {
-        this.currentSession = this.openSession();
+        this.currentSession = factory.openSession();
         this.currentTransaction = currentSession.beginTransaction();
 
         return currentSession;
