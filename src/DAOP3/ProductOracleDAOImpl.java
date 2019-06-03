@@ -107,22 +107,25 @@ public class ProductOracleDAOImpl implements ProductDAO {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
 
-        product.getCards().forEach(card -> {
-            try {
-                cardDao.save(card);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
-
         String strQuery = "INSERT INTO product (productnummer, productnaam, beschrijving, prijs) VALUES (?, ?, ?, ?)";
         PreparedStatement pstmt = conn.prepareStatement(strQuery);
         pstmt.setInt(1, product.getProductNummer());
         pstmt.setString(2, product.getProductNaam());
         pstmt.setString(3, product.getBeschrijving());
         pstmt.setDouble(4, product.getPrijs());
-
         pstmt.executeQuery();
+
+        if(!product.getCards().isEmpty()) {
+            for(OvChipkaart card : product.getCards()) {
+                String saveCardProductQuery = "INSERT INTO ov_chipkaart_product (ovproductid, kaartnummer, productnummer, reisproductstatus, lastupdate) VALUES ((SELECT MAX(ovproductid) + 1 FROM ov_chipkaart_product), ?, ?, null, null)";
+                PreparedStatement pstmt2 = conn.prepareStatement(saveCardProductQuery);
+                pstmt2.setInt(1, card.getKaartNummer());
+                pstmt2.setInt(2, product.getProductNummer());
+
+                pstmt2.executeUpdate();
+            }
+        }
+
         conn.close();
 
         return product;
@@ -133,22 +136,34 @@ public class ProductOracleDAOImpl implements ProductDAO {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
 
-        product.getCards().forEach(card -> {
-            try {
-                cardDao.update(card);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
-
         String strQuery = "UPDATE product SET (productnummer, productnaam, beschrijving, prijs) VALUES (?, ?, ?, ?) WHERE productnummer="+product.getProductNummer();
         PreparedStatement pstmt = conn.prepareStatement(strQuery);
         pstmt.setInt(1, product.getProductNummer());
         pstmt.setString(2, product.getProductNaam());
         pstmt.setString(3, product.getBeschrijving());
         pstmt.setDouble(4, product.getPrijs());
-
         pstmt.executeQuery();
+
+        String deleteOVPrductQuery = "DELETE FROM ov_chipkaart_product WHERE productnummer = ?";
+        PreparedStatement pstmt2 = conn.prepareStatement(deleteOVPrductQuery);
+        pstmt2.setInt(1, product.getProductNummer());
+        pstmt2.executeUpdate();
+        pstmt2.close();
+
+        product.getCards().forEach(card -> {
+            try {
+                String saveOVProductQuery = "INSERT INTO ov_chipkaart_product (ovproductid, kaartnummer, productnummer, reisproductstatus, lastupdate) VALUES ((SELECT MAX(ovproductid) + 1 FROM ov_chipkaart_product), ?, ?, null, null)";
+                PreparedStatement pstmt3 = conn.prepareStatement(saveOVProductQuery);
+                pstmt3.setInt(1, card.getKaartNummer());
+                pstmt3.setInt(2, product.getProductNummer());
+
+                pstmt3.executeUpdate();
+                pstmt3.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
         conn.close();
 
         return product;
@@ -159,19 +174,16 @@ public class ProductOracleDAOImpl implements ProductDAO {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
 
-        product.getCards().forEach(card -> {
-            try {
-                cardDao.delete(card);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
-
         String strQuery = "DELETE FROM product WHERE productnummer= ?";
         PreparedStatement pstmt = conn.prepareStatement(strQuery);
         pstmt.setInt(1, product.getProductNummer());
-
         pstmt.executeQuery();
+
+        String deleteOVProductQuery = "DELETE FROM ov_chipkaart_product WHERE productnummer = ?";
+        PreparedStatement pstmt2 = conn.prepareStatement(deleteOVProductQuery);
+        pstmt2.setInt(1, product.getProductNummer());
+        pstmt2.executeUpdate();
+
         conn.close();
 
         return true;

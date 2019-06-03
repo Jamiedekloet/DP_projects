@@ -153,14 +153,6 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
 
-        ovChipkaart.getProducts().forEach(product -> {
-            try {
-                productDao.save(product);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
-
         String strQuery = "INSERT INTO ov_chipkaart (productnummer, geldigtot, klasse, saldo, reizigerid) VALUES (?, ?, ?, ?, ?) ";
         PreparedStatement pstmt = conn.prepareStatement(strQuery);
         pstmt.setInt(1, ovChipkaart.getKaartNummer());
@@ -168,8 +160,19 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
         pstmt.setInt(3, ovChipkaart.getKlasse());
         pstmt.setDouble(4, ovChipkaart.getBalans());
         pstmt.setInt(5, ovChipkaart.getReiziger().getId());
-
         pstmt.executeQuery();
+
+        if(!ovChipkaart.getProducts().isEmpty()) {
+            for(Product product : ovChipkaart.getProducts()) {
+                String saveOVProductQuery = "INSERT INTO ov_chipkaart_product (ovproductid, kaartnummer, productnummer, reisproductstatus, lastupdate) VALUES ((SELECT MAX(ovproductid) + 1 FROM ov_chipkaart_product),?,?,null,null)";
+                PreparedStatement pstmt2 = conn.prepareStatement(saveOVProductQuery);
+                pstmt2.setInt(1, ovChipkaart.getKaartNummer());
+                pstmt2.setInt(2, product.getProductNummer());
+                pstmt2.executeUpdate();
+                pstmt2.close();
+            }
+        }
+
         conn.close();
 
         return ovChipkaart;
@@ -180,14 +183,6 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
 
-        ovChipkaart.getProducts().forEach(product -> {
-            try {
-                productDao.update(product);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
-
         String strQuery = "UPDATE ov_chipkaart SET (productnummer, geldigtot, klasse, saldo, reizigerid) VALUES (?, ?, ?, ?, ?) WHERE productnummer="+ovChipkaart.getKaartNummer();
         PreparedStatement pstmt = conn.prepareStatement(strQuery);
         pstmt.setInt(1, ovChipkaart.getKaartNummer());
@@ -195,8 +190,21 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
         pstmt.setInt(3, ovChipkaart.getKlasse());
         pstmt.setDouble(4, ovChipkaart.getBalans());
         pstmt.setInt(5, ovChipkaart.getReiziger().getId());
-
         pstmt.executeQuery();
+
+        ovChipkaart.getProducts().forEach(product -> {
+            try {
+                String saveOVProductQuery = "INSERT INTO ov_chipkaart_product (ovproductid, kaartnummer, productnummer, reisproductstatus, lastupdate) VALUES ((SELECT MAX(ovproductid) + 1 FROM ov_chipkaart_product),?,?,null,null)";
+                PreparedStatement pstmt2 = conn.prepareStatement(saveOVProductQuery);
+                pstmt2.setInt(1, ovChipkaart.getKaartNummer());
+                pstmt2.setInt(2, product.getProductNummer());
+                pstmt2.executeUpdate();
+                pstmt2.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
         conn.close();
 
         return ovChipkaart;
@@ -207,19 +215,16 @@ public class OvChipkaartDAOImpl implements OvChipkaartDAO {
         OracleBaseDao DAO = new OracleBaseDao();
         Connection conn = DAO.getConnection();
 
-            ovChipkaart.getProducts().forEach(product -> {
-                try {
-                    productDao.delete(product);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            });
-
         String strQuery = "DELETE FROM ov_chipkaart WHERE kaartnummer= ?";
         PreparedStatement pstmt = conn.prepareStatement(strQuery);
         pstmt.setInt(1, ovChipkaart.getKaartNummer());
-
         pstmt.executeQuery();
+
+        String deleteOVProductQuery = "DELETE FROM ov_chipkaart_product WHERE kaartnummer = ?";
+        PreparedStatement pstmt2 = conn.prepareStatement(deleteOVProductQuery);
+        pstmt2.setInt(1, ovChipkaart.getKaartNummer());
+        pstmt2.executeUpdate();
+
         conn.close();
 
         return true;
